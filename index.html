@@ -6,22 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>XIYANG-^_^-</title>
+  <title>横烟秋水上，疏雨夕阳中</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="�¶���������Ϧ����">
+  <meta name="description" content="初霁独登赏，西楼多远风。横烟秋水上，疏雨夕阳中。高树下山鸟，平芜飞草虫。唯应待明月，千里与君同。">
 <meta property="og:type" content="website">
-<meta property="og:title" content="XIYANG-^_^-">
+<meta property="og:title" content="横烟秋水上，疏雨夕阳中">
 <meta property="og:url" content="http://example.com/index.html">
-<meta property="og:site_name" content="XIYANG-^_^-">
-<meta property="og:description" content="�¶���������Ϧ����">
+<meta property="og:site_name" content="横烟秋水上，疏雨夕阳中">
+<meta property="og:description" content="初霁独登赏，西楼多远风。横烟秋水上，疏雨夕阳中。高树下山鸟，平芜飞草虫。唯应待明月，千里与君同。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="Ϧ��">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternative" href="/atom.xml" title="XIYANG-^_^-" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="横烟秋水上，疏雨夕阳中" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/icon/favicon.ico">
   
   <link rel="stylesheet" type="text/css" href="/./main.0cf68a.css">
   <style type="text/css">
@@ -45,11 +44,13 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="" class="js-avatar">
+			<img src="/img/avatar.jpg" class="js-avatar">
 		</a>
 		<hgroup>
-		  <h1 class="header-author"><a href="/"></a></h1>
+		  <h1 class="header-author"><a href="/">夕阳</a></h1>
 		</hgroup>
+		
+		<p class="header-subtitle">人生是在未知中跌跌撞撞，终点之前慢慢体会这仅有的一段人生。</p>
 		
 
 		<nav class="header-menu">
@@ -58,6 +59,8 @@
 				<li><a href="/">主页</a></li>
 	        
 				<li><a href="/tags/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+	        
+				<li><a href="/">相册</a></li>
 	        
 			</ul>
 		</nav>
@@ -89,7 +92,17 @@
 		        
 			</div>
 		</nav>
-	</header>		
+		<nav class="header-music">
+			<!-- ����������--���������ֲ�� -->
+			<div style="position:absolute; bottom:0px left:0px; width:85%">
+				
+    		<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=285 height=86 src="//music.163.com/outchain/player?type=2&id=545590414&auto=0&height=66"></iframe>
+				
+			</div>
+			<!-- ���������ֲ�� -->
+		</nav>
+	</header>	
+		
 </div>
 
     </div>
@@ -103,13 +116,17 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="" class="js-avatar">
+				<img src="/img/avatar.jpg" class="js-avatar">
 			</div>
 			<hgroup>
-			  <h1 class="header-author js-header-author"></h1>
+			  <h1 class="header-author js-header-author">夕阳</h1>
 			</hgroup>
 			
+			<p class="header-subtitle"><i class="icon icon-quo-left"></i>人生是在未知中跌跌撞撞，终点之前慢慢体会这仅有的一段人生。<i class="icon icon-quo-right"></i></p>
 			
+			
+			
+				
 			
 				
 			
@@ -132,12 +149,14 @@
 			</nav>
 
 			<nav class="header-menu js-header-menu">
-				<ul style="width: 50%">
+				<ul style="width: 70%">
 				
 				
-					<li style="width: 50%"><a href="/">主页</a></li>
+					<li style="width: 33.333333333333336%"><a href="/">主页</a></li>
 		        
-					<li style="width: 50%"><a href="/tags/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+					<li style="width: 33.333333333333336%"><a href="/tags/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+		        
+					<li style="width: 33.333333333333336%"><a href="/">相册</a></li>
 		        
 				</ul>
 			</nav>
@@ -160,87 +179,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="对Android的app开发的一些理解"><a href="#对Android的app开发的一些理解" class="headerlink" title="对Android的app开发的一些理解"></a>对Android的app开发的一些理解</h1><h2 id="1-Intent的一些理解"><a href="#1-Intent的一些理解" class="headerlink" title="1. Intent的一些理解"></a>1. Intent的一些理解</h2><p>作为Android的一个数据传输类，可以传递各种意图给Android系统，包含的内容有Action、Data、目标组件名、Category、Extra、Flag。</p>
-<h3 id="Intent-的常用构造方法："><a href="#Intent-的常用构造方法：" class="headerlink" title="Intent 的常用构造方法："></a>Intent 的常用构造方法：</h3><ul>
-<li><ol>
-<li>Intent() 构造一个空的Intent</li>
-</ol>
-</li>
-<li><ol start="2">
-<li>Intent(String Action) 构造一个指定Action的Intent</li>
-</ol>
-</li>
-<li><ol start="3">
-<li>Intent(String action,Uri uri) 构造一个指定Action(动作)和Uri(相当于同时设定了data)的Intent。</li>
-</ol>
-</li>
-<li><ol start="4">
-<li>Intent(Context packageContext,Class&lt;?&gt; cls) 构造一个指定目标组件的Intent，显式Intent的主要构造方法</li>
-</ol>
-</li>
-</ul>
-<h3 id="Intent的常用设定信息方法："><a href="#Intent的常用设定信息方法：" class="headerlink" title="Intent的常用设定信息方法："></a>Intent的常用设定信息方法：</h3><ul>
-<li><ol>
-<li>setAction(String action) 指定action</li>
-</ol>
-</li>
-<li><ol start="2">
-<li>setClass(Context packageContext,Class&lt;?&gt; cls) 指定目标组件类名</li>
-</ol>
-</li>
-<li><ol start="3">
-<li>setData(Uri data) 设置Data的Uri</li>
-</ol>
-</li>
-<li><ol start="4">
-<li>setType(String type) 设置Data的MIME类型</li>
-</ol>
-</li>
-<li><ol start="5">
-<li>setDataAndType(Uri data，String type) 同时设置Data的uri与MIME类型</li>
-</ol>
-</li>
-<li><ol start="6">
-<li>addCategory(String category) 添加一项Category，Intent可以有多个Category</li>
-</ol>
-</li>
-<li><ol start="7">
-<li>addFlags(int flags) 设置Flag，决定目标组件的启动方式</li>
-</ol>
-</li>
-<li><ol start="8">
-<li>putExtra(String name,基本类型和序列化类 value) 放入附加数据，参数2可以是各种基本类型，以及序列化后的自定义类</li>
-</ol>
-</li>
-<li><ol start="9">
-<li>putExtras(Bundle extras) 把封装了数据信息的Bundle对象放入Intent</li>
-</ol>
-</li>
-</ul>
-<p>* <strong>如果要同时设置URI和MIME类型，请勿调用setData()和setType(),因为他们会互相抵消彼此的值。请始终使用setDataAndType()同时设置URI和MIME类型。</strong></p>
-<h3 id="常用发送Intent来启动组件的方法："><a href="#常用发送Intent来启动组件的方法：" class="headerlink" title="常用发送Intent来启动组件的方法："></a>常用发送Intent来启动组件的方法：</h3><ul>
-<li><ol>
-<li>startActivity() 启动Activity</li>
-</ol>
-</li>
-<li><ol start="2">
-<li>startActivityForResult() 启动Activity，该Activity销毁后会回调到上一个活动的onActivityResult()方法</li>
-</ol>
-</li>
-<li><ol start="3">
-<li>bindService() 启动Service，5.0之后只能接收显式intent作为参数</li>
-</ol>
-</li>
-<li><ol start="4">
-<li>sendBroadcast() 发送标准广播</li>
-</ol>
-</li>
-<li><ol start="5">
-<li>sendOrderedBroadcast() 发送有序广播</li>
-</ol>
-</li>
-</ul>
-<hr>
-
+        
+          <a class="article-more-a" href="/2021/01/22/Android%E6%B5%8B%E8%AF%95%E4%B9%8BIntent/#more">more >></a>
+        
       
 
       
@@ -250,10 +191,6 @@
       
       
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/01/22/Android%E6%B5%8B%E8%AF%95%E4%B9%8BIntent/">展开全文 >></a>
-        </p>
       
 
       
@@ -298,10 +235,6 @@
       
       
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/01/22/%E4%BB%80%E4%B9%88%E5%8F%ABawesomium/">展开全文 >></a>
-        </p>
       
 
       
@@ -370,10 +303,6 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/01/22/hello-world/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
@@ -411,7 +340,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2021 Ϧ��
+    		&copy; 2021 横烟秋水上，疏雨夕阳中
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -419,6 +348,10 @@
     </div>
   </div>
 </footer>
+
+<!--ҳ����С����-->
+<script type="text/javascript" src="/love.js"></script>
+
     </div>
     <script>
 	var yiliaConfig = {
@@ -573,7 +506,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">记录一些心得&lt;br&gt;软件、硬件、游戏以及一些杂七杂八的东西&lt;br&gt;提示自己</div>
   	  	
     	</section>
     
