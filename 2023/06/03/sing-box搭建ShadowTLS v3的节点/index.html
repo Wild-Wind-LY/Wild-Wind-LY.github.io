@@ -1,0 +1,938 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>sing-box搭建shadowtls v3的节点 | 横烟秋水上，疏雨夕阳中</title><meta name="author"><meta name="copyright"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1.服务器设置1、开启BBR加速echo &quot;net.core.default_qdisc&#x3D;fq&quot; &gt;&gt; &#x2F;etc&#x2F;sysctl.conf echo &quot;net.ipv4.tcp_congestion_control&#x3D;bbr&quot; &gt;&gt; &#x2F;etc&#x2F;sysctl.conf sysctl -p  2、更新软件源及安装依赖  apt update">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sing-box搭建shadowtls v3的节点">
+<meta property="og:url" content="http://example.com/2023/06/03/sing-box%E6%90%AD%E5%BB%BAShadowTLS%20v3%E7%9A%84%E8%8A%82%E7%82%B9/index.html">
+<meta property="og:site_name" content="横烟秋水上，疏雨夕阳中">
+<meta property="og:description" content="1.服务器设置1、开启BBR加速echo &quot;net.core.default_qdisc&#x3D;fq&quot; &gt;&gt; &#x2F;etc&#x2F;sysctl.conf echo &quot;net.ipv4.tcp_congestion_control&#x3D;bbr&quot; &gt;&gt; &#x2F;etc&#x2F;sysctl.conf sysctl -p  2、更新软件源及安装依赖  apt update">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tse1-mm.cn.bing.net/th/id/OIP-C.y5pc2kuaVo_q_0fON0stlQHaD4?w=319&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7">
+<meta property="article:published_time" content="2023-06-03T11:02:40.245Z">
+<meta property="article:modified_time" content="2023-07-20T15:18:03.810Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tse1-mm.cn.bing.net/th/id/OIP-C.y5pc2kuaVo_q_0fON0stlQHaD4?w=319&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/06/03/sing-box%E6%90%AD%E5%BB%BAShadowTLS%20v3%E7%9A%84%E8%8A%82%E7%82%B9/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'sing-box搭建shadowtls v3的节点',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-07-20 23:18:03'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="https://gcore.jsdelivr.net/gh/sviptzk/StaticFile_HEXO@latest/butterfly/css/macblack.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://tse1-mm.cn.bing.net/th/id/OIP-C.y5pc2kuaVo_q_0fON0stlQHaD4?w=319&amp;h=180&amp;c=7&amp;r=0&amp;o=5&amp;dpr=1.3&amp;pid=1.7')"><nav id="nav"><span id="blog-info"><a href="/" title="横烟秋水上，疏雨夕阳中"><span class="site-name">横烟秋水上，疏雨夕阳中</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">sing-box搭建shadowtls v3的节点</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-06-03T11:02:40.245Z" title="发表于 2023-06-03 19:02:40">2023-06-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-07-20T15:18:03.810Z" title="更新于 2023-07-20 23:18:03">2023-07-20</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="sing-box搭建shadowtls v3的节点"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="1-服务器设置"><a href="#1-服务器设置" class="headerlink" title="1.服务器设置"></a>1.服务器设置</h2><h3 id="1、开启BBR加速"><a href="#1、开启BBR加速" class="headerlink" title="1、开启BBR加速"></a>1、开启BBR加速</h3><pre><code>echo &quot;net.core.default_qdisc=fq&quot; &gt;&gt; /etc/sysctl.conf
+echo &quot;net.ipv4.tcp_congestion_control=bbr&quot; &gt;&gt; /etc/sysctl.conf
+sysctl -p
+</code></pre>
+<h3 id="2、更新软件源及安装依赖"><a href="#2、更新软件源及安装依赖" class="headerlink" title="2、更新软件源及安装依赖"></a>2、更新软件源及安装依赖</h3><blockquote>
+<p> apt update &amp;&amp; apt -y install wget git libc6-dev build-essential zlib1g-dev libssl-dev libevent-dev mingw-w64</p>
+</blockquote>
+<h2 id="2-一键安装sing-box"><a href="#2-一键安装sing-box" class="headerlink" title="2.一键安装sing-box"></a>2.一键安装sing-box</h2><h3 id="1-一键安装脚本"><a href="#1-一键安装脚本" class="headerlink" title="1.一键安装脚本"></a>1.一键安装脚本</h3><blockquote>
+<p> bash &lt;(curl -Ls <a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/FranzKafkaYu/sing-box-yes/master/install.sh">https://raw.githubusercontent.com/FranzKafkaYu/sing-box-yes/master/install.sh</a>)</p>
+</blockquote>
+<h2 id="3-手动安装sing-box"><a href="#3-手动安装sing-box" class="headerlink" title="3.手动安装sing-box"></a>3.手动安装sing-box</h2><h3 id="1、安装go"><a href="#1、安装go" class="headerlink" title="1、安装go"></a>1、安装go</h3><pre><code>wget -c https://go.dev/dl/go1.20.3.linux-amd64.tar.gz -O - | tar -xz -C /usr/local
+echo &#39;export PATH=$PATH:/usr/local/go/bin&#39; &gt; /etc/profile
+source /etc/profile
+</code></pre>
+<h3 id="2、编译安装sing-box"><a href="#2、编译安装sing-box" class="headerlink" title="2、编译安装sing-box"></a>2、编译安装sing-box</h3><pre><code>go install -v -tags \
+with_quic,\
+with_grpc,\
+with_dhcp,\
+with_wireguard,\
+with_ech,\
+with_utls,\
+with_reality_server,\
+with_acme,\
+with_clash_api,\
+with_v2ray_api,\
+with_gvisor,\
+with_lwip \
+github.com/sagernet/sing-box/cmd/sing-box@latest
+</code></pre>
+<h3 id="3、复制编译好的sing-box到-usr-local-bin-目录"><a href="#3、复制编译好的sing-box到-usr-local-bin-目录" class="headerlink" title="3、复制编译好的sing-box到&#x2F;usr&#x2F;local&#x2F;bin&#x2F;目录"></a>3、复制编译好的sing-box到&#x2F;usr&#x2F;local&#x2F;bin&#x2F;目录</h3><blockquote>
+<p> cp ~&#x2F;go&#x2F;bin&#x2F;sing-box &#x2F;usr&#x2F;local&#x2F;bin&#x2F;</p>
+</blockquote>
+<h3 id="4、为sing-box配置开机自启服务"><a href="#4、为sing-box配置开机自启服务" class="headerlink" title="4、为sing-box配置开机自启服务"></a>4、为sing-box配置开机自启服务</h3><blockquote>
+<p> cat &gt; &#x2F;etc&#x2F;systemd&#x2F;system&#x2F;sing-box.service &lt;&lt;EOF</p>
+</blockquote>
+<pre><code>[Unit]
+Description=sing-box service
+Documentation=https://sing-box.sagernet.org
+After=network.target nss-lookup.target
+[Service]
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+ExecStart=/usr/local/bin/sing-box run -c /usr/local/etc/sing-box/config.json
+Restart=on-failure
+RestartSec=1800s
+LimitNOFILE=infinity
+[Install]
+WantedBy=multi-user.target
+EOF
+</code></pre>
+<h3 id="5、创建sing-box文件夹"><a href="#5、创建sing-box文件夹" class="headerlink" title="5、创建sing-box文件夹"></a>5、创建sing-box文件夹</h3><pre><code>mkdir /usr/local/etc/sing-box &amp;&amp; cd $_
+</code></pre>
+<h3 id="6、创建sing-box配置文件"><a href="#6、创建sing-box配置文件" class="headerlink" title="6、创建sing-box配置文件"></a>6、创建sing-box配置文件</h3><pre><code>touch config.json
+</code></pre>
+<h3 id="7、服务端配置信息"><a href="#7、服务端配置信息" class="headerlink" title="7、服务端配置信息"></a>7、服务端配置信息</h3><pre><code>&#123;
+  &quot;log&quot;: &#123;
+    &quot;disabled&quot;: false,
+    &quot;level&quot;: &quot;info&quot;,
+    &quot;timestamp&quot;: true
+  &#125;,
+  &quot;dns&quot;: &#123;
+    &quot;servers&quot;: [
+      &#123; 
+        &quot;tag&quot;: &quot;local&quot;,
+        &quot;address&quot;: &quot;https://1.1.1.1/dns-query&quot;,
+        &quot;detour&quot;: &quot;direct&quot;
+      &#125;,
+      &#123;
+        &quot;tag&quot;: &quot;block&quot;,
+        &quot;address&quot;: &quot;rcode://success&quot;
+      &#125;
+    ],
+    &quot;rules&quot;: [
+      &#123; 
+        &quot;geosite&quot;: &quot;cn&quot;,
+        &quot;server&quot;: &quot;local&quot;
+      &#125;,
+      &#123;
+        &quot;geosite&quot;: &quot;category-ads-all&quot;,
+        &quot;server&quot;: &quot;block&quot;,
+        &quot;disable_cache&quot;: true
+      &#125;
+    ]
+  &#125;,
+  &quot;inbounds&quot;: [
+    &#123;
+      &quot;type&quot;: &quot;shadowtls&quot;,
+      &quot;tag&quot;: &quot;st-in&quot;,
+      &quot;listen&quot;: &quot;::&quot;,
+      &quot;listen_port&quot;: 443, //监听端口
+      &quot;version&quot;: 3, //协议版本为ShadowTLS v3
+      &quot;users&quot;: [
+        &#123;
+          &quot;name&quot;: &quot;username&quot;,    //用户名
+          &quot;password&quot;: &quot;XTVsAyFnREiRn5hgrjUAu8a9dSsicFKYIJM+K8+Iv8g=&quot; //ShadowTLS 密码，执行sing-box generate rand --base64 32生成
+        &#125;
+      ],
+      &quot;handshake&quot;: &#123;
+        &quot;server&quot;: &quot;www.apple.com&quot;, //握手服务器地址
+        &quot;server_port&quot;: 443
+      &#125;,
+      &quot;strict_mode&quot;: true, //开启ShadowTLS 严格模式
+      &quot;detour&quot;: &quot;ss-in&quot;   //连接转发到shadowsocks节点
+    &#125;,
+    &#123;
+      &quot;type&quot;: &quot;shadowsocks&quot;,    //shadowsocks节点配置
+      &quot;tag&quot;: &quot;ss-in&quot;,
+      &quot;listen&quot;: &quot;127.0.0.1&quot;,
+      &quot;network&quot;: &quot;tcp&quot;,
+      &quot;method&quot;: &quot;2022-blake3-chacha20-poly1305&quot;,    //Shadowsocks加密方式
+      &quot;password&quot;: &quot;NZew3ZrmZjxullszmAKtfu+pZh0F1dxnIPcwlaStjyI=&quot; //Shadowsocks密码，执行sing-box generate rand --base64 32生成
+    &#125;
+  ], 
+  &quot;outbounds&quot;: [
+    &#123;
+      &quot;type&quot;: &quot;direct&quot;,
+      &quot;tag&quot;: &quot;direct&quot;
+    &#125;,
+    &#123;
+      &quot;type&quot;: &quot;block&quot;,
+      &quot;tag&quot;: &quot;block&quot;
+    &#125;
+  ],
+  &quot;route&quot;: &#123;
+    &quot;geoip&quot;: &#123;
+      &quot;download_url&quot;: &quot;https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db&quot;,
+      &quot;download_detour&quot;: &quot;direct&quot;
+    &#125;,
+    &quot;geosite&quot;: &#123;
+      &quot;download_url&quot;: &quot;https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db&quot;,
+      &quot;download_detour&quot;: &quot;direct&quot;
+    &#125;, 
+    &quot;rules&quot;: [
+      &#123;
+        &quot;geosite&quot;: &quot;cn&quot;,
+        &quot;geoip&quot;: &quot;cn&quot;,
+        &quot;outbound&quot;: &quot;direct&quot;
+      &#125;,
+      &#123;
+        &quot;geosite&quot;: &quot;category-ads-all&quot;,
+        &quot;outbound&quot;: &quot;block&quot;
+      &#125;
+    ]
+  &#125;
+&#125;
+</code></pre>
+<h3 id="8、测试配置文件是否有效"><a href="#8、测试配置文件是否有效" class="headerlink" title="8、测试配置文件是否有效"></a>8、测试配置文件是否有效</h3><blockquote>
+<p> &#x2F;usr&#x2F;local&#x2F;bin&#x2F;sing-box run -c &#x2F;usr&#x2F;local&#x2F;etc&#x2F;sing-box&#x2F;config.json</p>
+</blockquote>
+<h3 id="9、启动并设置sing-box为开机自启"><a href="#9、启动并设置sing-box为开机自启" class="headerlink" title="9、启动并设置sing-box为开机自启"></a>9、启动并设置sing-box为开机自启</h3><blockquote>
+<p> systemctl enable –now sing-box</p>
+</blockquote>
+<h3 id="10、查看sing-box启动状态"><a href="#10、查看sing-box启动状态" class="headerlink" title="10、查看sing-box启动状态"></a>10、查看sing-box启动状态</h3><blockquote>
+<p> systemctl status sing-box</p>
+</blockquote>
+<h3 id="11、sing-box客户端配置"><a href="#11、sing-box客户端配置" class="headerlink" title="11、sing-box客户端配置"></a>11、sing-box客户端配置</h3><pre><code>&#123;
+    &quot;log&quot;: &#123;
+        &quot;level&quot;: &quot;info&quot;,
+        &quot;timestamp&quot;: true
+    &#125;,
+    &quot;route&quot;: &#123;
+        &quot;rules&quot;: [
+            &#123;
+                &quot;geosite&quot;: [
+                    &quot;cn&quot;,
+                    &quot;private&quot;
+                ],
+                &quot;geoip&quot;: [
+                    &quot;cn&quot;,
+                    &quot;private&quot;
+                ],
+                &quot;outbound&quot;: &quot;direct&quot;
+            &#125;
+        ]
+    &#125;,
+    &quot;inbounds&quot;: [
+        &#123;
+            &quot;type&quot;: &quot;mixed&quot;,
+            &quot;tag&quot;: &quot;mixed-in&quot;,
+            &quot;listen&quot;: &quot;::&quot;,
+            &quot;listen_port&quot;: 10000,
+            &quot;domain_strategy&quot;: &quot;ipv4_only&quot;,
+            &quot;set_system_proxy&quot;: true
+        &#125;
+    ],
+    &quot;outbounds&quot;: [
+        &#123;
+            &quot;type&quot;: &quot;shadowsocks&quot;,
+            &quot;tag&quot;: &quot;proxy&quot;,
+            &quot;detour&quot;: &quot;shadowtls-out&quot;,
+            &quot;method&quot;: &quot;2022-blake3-chacha20-poly1305&quot;,
+            &quot;password&quot;: &quot;7uGwrEUL9cagfQKAPPbMrnox3RIUPWUKD6iNjQ/kino=&quot;, // 与服务端一致
+            &quot;udp_over_tcp&quot;: &#123;
+                &quot;enabled&quot;: false,
+                &quot;version&quot;: 2
+            &#125;,
+            &quot;multiplex&quot;: &#123;
+                &quot;enabled&quot;: true,
+                &quot;max_connections&quot;: 4,
+                &quot;min_streams&quot;: 4
+            &#125;
+        &#125;,
+        &#123;
+            &quot;type&quot;: &quot;shadowtls&quot;,
+            &quot;tag&quot;: &quot;shadowtls-out&quot;,
+            &quot;server&quot;: &quot;&quot;, // 服务端的 IP
+            &quot;server_port&quot;: 443,
+            &quot;version&quot;: 3,
+            &quot;password&quot;: &quot;dAgFeprZ2+a0b7CX9mjmdgTnZ3UGuhTs9Dz1581hojA=&quot;,
+            &quot;tls&quot;: &#123;
+                &quot;enabled&quot;: true,
+                &quot;server_name&quot;: &quot;www.apple.com&quot;, // 与服务端一致
+                &quot;utls&quot;: &#123;
+                    &quot;enabled&quot;: true,
+                    &quot;fingerprint&quot;: &quot;chrome&quot;
+                &#125;
+            &#125;
+        &#125;,
+        &#123;
+            &quot;type&quot;: &quot;direct&quot;,
+            &quot;tag&quot;: &quot;direct&quot;
+        &#125;
+    ]
+&#125; 
+</code></pre>
+<h3 id="12、clash-配置文件"><a href="#12、clash-配置文件" class="headerlink" title="12、clash 配置文件"></a>12、clash 配置文件</h3><pre><code># port: 7890 # HTTP(S) 代理服务器端口
+# socks-port: 7891 # SOCKS5 代理端口
+mixed-port: 10801 # HTTP(S) 和 SOCKS 代理混合端口
+# redir-port: 7892 # 透明代理端口，用于 Linux 和 MacOS
+# Transparent proxy server port for Linux (TProxy TCP and TProxy UDP)
+# tproxy-port: 7893
+allow-lan: true # 允许局域网连接
+bind-address: &quot;*&quot; # 绑定 IP 地址，仅作用于 allow-lan 为 true，&#39;*&#39;表示所有地址
+# find-process-mode has 3 values:always, strict, off
+# - always, 开启，强制匹配所有进程
+# - strict, 默认，由 clash 判断是否开启
+# - off, 不匹配进程，推荐在路由器上使用此模式
+find-process-mode: strict
+mode: rule
+#自定义 geodata url
+geox-url:
+  geoip: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat&quot;
+  geosite: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat&quot;
+  mmdb: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/geoip@release/Country.mmdb&quot;
+log-level: debug # 日志等级 silent/error/warning/info/debug
+ipv6: true # 开启 IPv6 总开关，关闭阻断所有 IPv6 链接和屏蔽 DNS 请求 AAAA 记录
+external-controller: 0.0.0.0:9093 # RESTful API 监听地址
+secret: &quot;123456&quot; # RESTful API的密码 (可选)
+# tcp-concurrent: true # TCP 并发连接所有 IP, 将使用最快握手的 TCP
+#external-ui: /path/to/ui/folder # 配置 WEB UI 目录，使用 http://&#123;&#123;external-controller&#125;&#125;/ui 访问
+# interface-name: en0 # 设置出口网卡
+# 全局 TLS 指纹，优先低于 proxy 内的 client-fingerprint
+# 可选： &quot;chrome&quot;,&quot;firefox&quot;,&quot;safari&quot;,&quot;ios&quot;,&quot;random&quot;,&quot;none&quot; options.
+# Utls is currently support TLS transport in TCP/grpc/WS/HTTP for VLESS/Vmess and trojan.
+global-client-fingerprint: chrome
+# routing-mark:6666 # 配置 fwmark 仅用于 Linux
+# 实验性选择
+# experimental:
+# 类似于 /etc/hosts, 仅支持配置单个 IP
+# hosts:
+  # &#39;*.clash.dev&#39;: 127.0.0.1
+  # &#39;.dev&#39;: 127.0.0.1
+  # &#39;alpha.clash.dev&#39;: &#39;::1&#39;
+  # test.com: [1.1.1.1, 2.2.2.2]
+  # clash.lan: clash # clash 为特别字段，将加入本地所有网卡的地址
+  # baidu.com: google.com # 只允许配置一个别名
+profile: # 存储 select 选择记录
+  store-selected: true
+  # 持久化 fake-ip
+  store-fake-ip: true
+# 嗅探域名
+sniffer:
+  enable: true
+  sniffing:
+    - tls
+    - http
+  # 强制对此域名进行嗅探
+dns:
+  enable: true #开启Clash内置DNS服务器，默认为false
+  prefer-h3: true # 开启 DoH 支持 HTTP/3，将并发尝试
+  listen: 0.0.0.0:53 # 开启 DNS 服务器监听
+  ipv6: true # false 将返回 AAAA 的空结果 
+  # ipv6-timeout: 300 # 单位：ms，内部双栈并发时，向上游查询 AAAA 时，等待 AAAA 的时间，默认 100ms
+  # 解析nameserver和fallback的DNS服务器
+  # 填入纯IP的DNS服务器
+  default-nameserver:
+    - 114.114.114.114
+    - 223.5.5.5
+  enhanced-mode: fake-ip # 模式fake-ip
+  fake-ip-range: 198.18.0.1/16 # fake-ip 池设置
+  # use-hosts: true # 查询 hosts
+  # 配置不使用fake-ip的域名
+  fake-ip-filter:
+    - &quot;*.lan&quot;
+    - &quot;*.localdomain&quot;
+    - &quot;*.example&quot;
+    - &quot;*.invalid&quot;
+    - &quot;*.localhost&quot;
+    - &quot;*.test&quot;
+    - &quot;*.local&quot;
+    - &quot;*.home.arpa&quot;
+    - time.*.com
+    - time.*.gov
+    - time.*.edu.cn
+    - time.*.apple.com
+    - time1.*.com
+    - time2.*.com
+    - time3.*.com
+    - time4.*.com
+    - time5.*.com
+    - time6.*.com
+    - time7.*.com
+    - ntp.*.com
+    - ntp1.*.com
+    - ntp2.*.com
+    - ntp3.*.com
+    - ntp4.*.com
+    - ntp5.*.com
+    - ntp6.*.com
+    - ntp7.*.com
+    - &quot;*.time.edu.cn&quot;
+    - &quot;*.ntp.org.cn&quot;
+    - &quot;+.pool.ntp.org&quot;
+    - music.163.com
+    - &quot;*.music.163.com&quot;
+    - &quot;*.126.net&quot;
+    - musicapi.taihe.com
+    - music.taihe.com
+    - songsearch.kugou.com
+    - trackercdn.kugou.com
+    - &quot;*.kuwo.cn&quot;
+    - api-jooxtt.sanook.com
+    - api.joox.com
+    - joox.com
+    - y.qq.com
+    - &quot;*.y.qq.com&quot;
+    - streamoc.music.tc.qq.com
+    - mobileoc.music.tc.qq.com
+    - isure.stream.qqmusic.qq.com
+    - dl.stream.qqmusic.qq.com
+    - aqqmusic.tc.qq.com
+    - amobile.music.tc.qq.com
+    - &quot;*.xiami.com&quot;
+    - &quot;*.music.migu.cn&quot;
+    - music.migu.cn
+    - &quot;*.msftconnecttest.com&quot;
+    - &quot;*.msftncsi.com&quot;
+    - msftconnecttest.com
+    - msftncsi.com
+    - localhost.ptlogin2.qq.com
+    - localhost.sec.qq.com
+    - &quot;+.srv.nintendo.net&quot;
+    - &quot;+.stun.playstation.net&quot;
+    - xbox.*.microsoft.com
+    - xnotify.xboxlive.com
+    - &quot;+.battlenet.com.cn&quot;
+    - &quot;+.wotgame.cn&quot;
+    - &quot;+.wggames.cn&quot;
+    - &quot;+.wowsgame.cn&quot;
+    - &quot;+.jd.com&quot;
+    - &quot;+.wargaming.net&quot;
+    - proxy.golang.org
+    - stun.*.*
+    - stun.*.*.*
+    - &quot;+.stun.*.*&quot;
+    - &quot;+.stun.*.*.*&quot;
+    - &quot;+.stun.*.*.*.*&quot;
+    - heartbeat.belkin.com
+    - &quot;*.linksys.com&quot;
+    - &quot;*.linksyssmartwifi.com&quot;
+    - &quot;*.router.asus.com&quot;
+    - mesu.apple.com
+    - swscan.apple.com
+    - swquery.apple.com
+    - swdownload.apple.com
+    - swcdn.apple.com
+    - swdist.apple.com
+    - lens.l.google.com
+    - stun.l.google.com
+    - &quot;+.nflxvideo.net&quot;
+    - &quot;*.square-enix.com&quot;
+    - &quot;*.finalfantasyxiv.com&quot;
+    - &quot;*.ffxiv.com&quot;
+    - &#39;*.mcdn.bilivideo.cn&#39; 
+  # DNS主要域名配置
+  # 支持 UDP，TCP，DoT，DoH，DoQ
+  # 这部分为主要 DNS 配置，影响所有直连，确保使用对大陆解析精准的 DNS
+  nameserver:
+    - 114.114.114.114 # default value
+    - 223.5.5.5
+    - 119.29.29.29
+    - https://doh.360.cn/dns-query
+    - https://doh.pub/dns-query # DNS over HTTPS
+    - https://dns.alidns.com/dns-query # 强制 HTTP/3，与 perfer-h3 无关，强制开启 DoH 的 HTTP/3 支持，若不支持将无法使用
+  # 当配置 fallback 时，会查询 nameserver 中返回的 IP 是否为 CN，非必要配置
+  # 当不是 CN，则使用 fallback 中的 DNS 查询结果
+  # 确保配置 fallback 时能够正常查询
+  fallback:
+    - 219.141.136.10
+    - 8.8.8.8
+    - 1.1.1.1
+    - https://cloudflare-dns.com/dns-query
+    - https://dns.google/dns-query
+  # 配置 fallback 使用条件
+  fallback-filter:
+    geoip: false # 配置是否使用 geoip
+    geoip-code: CN # 当 nameserver 域名的 IP 查询 geoip 库为 CN 时，不使用 fallback 中的 DNS 查询结果
+  # 如果不匹配 ipcidr 则使用 nameservers 中的结果
+    ipcidr:
+      - 240.0.0.0/4
+    domain:
+      - &quot;+.google.com&quot;
+      - &quot;+.facebook.com&quot;
+      - &quot;+.youtube.com&quot;
+      - &quot;+.githubusercontent.com&quot;
+      - &quot;+.googlevideo.com&quot;
+proxies: 
+- name: ShadowTLS v3
+  type: ss
+  server: 216.127.162.47 #VPS IP地址
+  port: 443 #监听端口
+  cipher: 2022-blake3-chacha20-poly1305 #shadowsocks节点的加密方式
+  password: &quot;NZew3ZrmZjxullszmAKtfu+pZh0F1dxnIPcwlaStjyI=&quot; #shadowsocks节点的密码
+  plugin: shadow-tls
+  client-fingerprint: chrome
+  plugin-opts:
+    host: &quot;www.apple.com&quot; #握手服务器地址
+    password: &quot;XTVsAyFnREiRn5hgrjUAu8a9dSsicFKYIJM+K8+Iv8g=&quot;   #ShadowTLS密码
+    version: 3 # support 1/2/3
+proxy-groups: 
+- name: PROXY
+  type: select
+  proxies:
+    - ShadowTLS v3
+rule-providers:
+  reject:
+    type: http
+    behavior: domain
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt&quot;
+    path: ./ruleset/reject.yaml
+    interval: 86400
+  icloud:
+    type: http
+    behavior: domain
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt&quot;
+    path: ./ruleset/icloud.yaml
+    interval: 86400
+  apple:
+    type: http
+    behavior: domain
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt&quot;
+    path: ./ruleset/apple.yaml
+    interval: 86400
+  proxy:
+    type: http
+    behavior: domain
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt&quot;
+    path: ./ruleset/proxy.yaml
+    interval: 86400
+  direct:
+    type: http
+    behavior: domain
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt&quot;
+    path: ./ruleset/direct.yaml
+    interval: 86400
+  private:
+    type: http
+    behavior: domain
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt&quot;
+    path: ./ruleset/private.yaml
+    interval: 86400
+  gfw:
+    type: http
+    behavior: domain
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt&quot;
+    path: ./ruleset/gfw.yaml
+    interval: 86400
+  greatfire:
+    type: http
+    behavior: domain
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/greatfire.txt&quot;
+    path: ./ruleset/greatfire.yaml
+    interval: 86400
+  tld-not-cn:
+    type: http
+    behavior: domain
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt&quot;
+    path: ./ruleset/tld-not-cn.yaml
+    interval: 86400
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt&quot;
+    path: ./ruleset/telegramcidr.yaml
+    interval: 86400
+  cncidr:
+    type: http
+    behavior: ipcidr
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt&quot;
+    path: ./ruleset/cncidr.yaml
+    interval: 86400
+  lancidr:
+    type: http
+    behavior: ipcidr
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt&quot;
+    path: ./ruleset/lancidr.yaml
+    interval: 86400
+  applications:
+    type: http
+    behavior: classical
+    url: &quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt&quot;
+    path: ./ruleset/applications.yaml
+    interval: 86400
+rules:
+  - RULE-SET,applications,DIRECT
+  - DOMAIN,clash.razord.top,DIRECT
+  - DOMAIN,yacd.haishan.me,DIRECT
+  - DOMAIN-SUFFIX,services.googleapis.cn,DIRECT
+  - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,DIRECT
+  - RULE-SET,private,DIRECT
+  - RULE-SET,reject,REJECT
+  - RULE-SET,icloud,DIRECT
+  - RULE-SET,apple,DIRECT
+  - RULE-SET,proxy,PROXY
+  - RULE-SET,direct,DIRECT
+  - RULE-SET,lancidr,DIRECT
+  - RULE-SET,cncidr,DIRECT
+  - RULE-SET,telegramcidr,PROXY
+  - GEOIP,LAN,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,PROXY
+</code></pre>
+<h4 id="12-1新增配置"><a href="#12-1新增配置" class="headerlink" title="12.1新增配置"></a>12.1新增配置</h4><pre><code>&#123;
+  &quot;type&quot;: &quot;vless&quot;,
+  &quot;tag&quot;: &quot;vless-in&quot;,
+  &quot;listen&quot;: &quot;::&quot;,
+  &quot;listen_port&quot;: 10242, //监听端口
+  &quot;users&quot;: [
+    &#123;
+      &quot;uuid&quot;: &quot;bf000d23-0752-40b4-affe-68f7707a9661&quot;, //执行 sing-box generate uuid 生成
+      &quot;flow&quot;: &quot;xtls-rprx-vision&quot;
+    &#125;
+  ],
+  &quot;tls&quot;: &#123;
+    &quot;enabled&quot;: true,
+    &quot;server_name&quot;: &quot;www.lovelive-anime.jp&quot;, //客户端可用的 serverName 列表，暂不支持 * 通配符
+    &quot;reality&quot;: &#123;
+      &quot;enabled&quot;: true,
+      &quot;handshake&quot;: &#123;
+        &quot;server&quot;: &quot;www.lovelive-anime.jp&quot;, //目标网站，标准：国外网站，支持 TLSv1.3 与 H2
+        &quot;server_port&quot;: 443
+      &#125;,
+      &quot;private_key&quot;: &quot;UuMBgl7MXTPx9inmQp2UC7Jcnwc6XYbwDNebonM-FCc&quot;, // 执行 sing-box generate reality-keypair 生成
+      &quot;short_id&quot;: [ //客户端可用的 shortId 列表，可用于区分不同的客户端
+        &quot;0123456789abcdef&quot; //执行 openssl rand -hex 8 生成或留空
+      ]
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="12-2、clash-配置-需要-clashmeta-内核）"><a href="#12-2、clash-配置-需要-clashmeta-内核）" class="headerlink" title="12.2、clash 配置 (需要 clashmeta 内核）"></a>12.2、clash 配置 (需要 clashmeta 内核）</h4><pre><code>- name: reality
+  type: vless
+  server: x.x.x.x  #ip地址
+  port: 10242  #端口
+  uuid: bf000d23-0752-40b4-affe-68f7707a9661  #UUID
+  network: tcp
+  udp: true
+  tls: true
+  flow: xtls-rprx-vision
+  servername: www.lovelive-anime.jp  #服务端server_name
+  client-fingerprint: chrome
+  reality-opts:
+    public-key: ajBkMYVvF14hVLPw1cKwyMzHdAj7Rg6L6MyMg6btYV8  #服务端私钥对应的公钥
+    short-id: 0123456789abcdef  #服务端short_id
+</code></pre>
+<h3 id="13、共用-443-端口"><a href="#13、共用-443-端口" class="headerlink" title="13、共用 443 端口"></a>13、共用 443 端口</h3><p>接下来直接放大招，singbox shadowtls reality 和自己的网站共用 443 端口     </p>
+<h4 id="13-1、shadowtls-和网站共有-443-端口"><a href="#13-1、shadowtls-和网站共有-443-端口" class="headerlink" title="13.1、shadowtls 和网站共有 443 端口"></a>13.1、shadowtls 和网站共有 443 端口</h4><p>下面给出一个代码，可以直接用 singbox 自带的 sni 分流实现共用 443 端口<br>首先给出一段 nginx 代码，这段代码就是 fuck.piig.top:1443 指向了我的一个网站，因为我的 443 端口被占用了，所以只能用 1443 了     </p>
+<pre><code>http &#123;
+    server &#123;
+        listen 80;
+        server_name fuck.piig.top;
+        return 301 https://$host$request_uri;
+    &#125;
+    
+    server &#123;
+        listen 1443 ssl;
+        server_name fuck.piig.top;
+        ssl_certificate /root/cert.crt;
+        ssl_certificate_key /root/private.key ;
+    
+        location / &#123;
+            proxy_pass http://127.0.0.1:8090;
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            
+            # Required for WebSocket proxying
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection &quot;upgrade&quot;;
+            
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>之后在 shadowtls 的 handshake 下面添加 handshake_for_server_name, 这 love.piig.top 1443 就是我的网站了。<br>sni 分流到 443 端口      </p>
+<pre><code>&quot;handshake&quot;: &#123;
+    &quot;server&quot;: &quot;www.apple.com&quot;,
+    &quot;server_port&quot;: 443
+
+&#125;,
+&quot;handshake_for_server_name&quot;: &#123;
+    &quot;fuck.piig.top&quot;: &#123;
+        &quot;server&quot;: &quot;127.0.0.1&quot;,
+        &quot;server_port&quot;: 1443
+&#125;&#125;,
+</code></pre>
+<p>shadowtls 和 reality 和网站共用 443 端口<br>上文的 reality 配置用了 lovejp 官网和 10242 端口   </p>
+<pre><code>&quot;handshake&quot;: &#123;
+
+    &quot;server&quot;: &quot;www.apple.com&quot;,
+    &quot;server_port&quot;: 443
+
+&#125;,
+&quot;handshake_for_server_name&quot;: &#123;
+    &quot;fuck.piig.top&quot;: &#123;
+        &quot;server&quot;: &quot;127.0.0.1&quot;,
+        &quot;server_port&quot;: 1443
+&#125;,
+    &quot;www.lovelive-anime.jp&quot;: &#123;
+        &quot;server&quot;: &quot;127.0.0.1&quot;,
+        &quot;server_port&quot;: 10242
+&#125;&#125;,
+</code></pre>
+<p>重启 singbox 即可   </p>
+<h4 id="13-2、clash-配置-需要-clashmeta-内核）"><a href="#13-2、clash-配置-需要-clashmeta-内核）" class="headerlink" title="13.2、clash 配置 (需要 clashmeta 内核）"></a>13.2、clash 配置 (需要 clashmeta 内核）</h4><p>把原来的 10242 修改成 443 即可   </p>
+<pre><code>- name: reality  
+  type: vless  
+  server: x.x.x.x  #ip地址  
+  port: 443  #端口  
+  uuid: bf000d23-0752-40b4-affe-68f7707a9661  #UUID  
+  network: tcp  
+  udp: true
+  tls: true
+  flow: xtls-rprx-vision
+  servername: www.lovelive-anime.jp  #服务端server_name
+  client-fingerprint: chrome
+  reality-opts:
+    public-key: ajBkMYVvF14hVLPw1cKwyMzHdAj7Rg6L6MyMg6btYV8  #服务端私钥对应的公钥
+    short-id: 0123456789abcdef  #服务端short_id
+</code></pre>
+<h3 id="14、完整代码"><a href="#14、完整代码" class="headerlink" title="14、完整代码"></a>14、完整代码</h3><p>singbox，shadowtls reality 网站共存共用 443 端口。</p>
+<pre><code>&#123;
+
+&quot;log&quot;: &#123;
+&quot;disabled&quot;: false,
+&quot;level&quot;: &quot;info&quot;,
+&quot;timestamp&quot;: true
+
+&#125;,
+
+&quot;dns&quot;: &#123;
+&quot;servers&quot;: [
+&#123;
+&quot;tag&quot;: &quot;local&quot;,	
+&quot;address&quot;: &quot;https://1.1.1.1/dns-query&quot;,	
+&quot;detour&quot;: &quot;direct&quot;	
+&#125;,	
+&#123;	
+&quot;tag&quot;: &quot;block&quot;,	
+&quot;address&quot;: &quot;rcode://success&quot;	
+&#125;	
+],	
+&quot;rules&quot;: [	
+&#123;	
+&quot;geosite&quot;: &quot;cn&quot;,	
+&quot;server&quot;: &quot;local&quot;	
+&#125;,	
+&#123;	
+&quot;geosite&quot;: &quot;category-ads-all&quot;,	
+&quot;server&quot;: &quot;block&quot;,	
+&quot;disable_cache&quot;: true	
+&#125;	
+]	
+&#125;,	
+&quot;inbounds&quot;: [	
+&#123;	
+&quot;type&quot;: &quot;shadowtls&quot;,	
+&quot;tag&quot;: &quot;st-in&quot;,	
+&quot;listen&quot;: &quot;::&quot;,	
+&quot;listen_port&quot;: 443,	
+&quot;version&quot;: 3,	
+&quot;users&quot;: [	
+&#123;	
+&quot;name&quot;: &quot;username&quot;,	
+&quot;password&quot;: &quot;cpCNsB3XRCRBZ0nv6ripgr51J53VdaixVvuiWzytPNY=&quot;	
+&#125;	
+],	
+&quot;handshake&quot;: &#123;
+&quot;server&quot;: &quot;www.apple.com&quot;,	
+&quot;server_port&quot;: 443	
+&#125;,	
+&quot;handshake_for_server_name&quot;: &#123;	
+&quot;fuck.piig.top&quot;: &#123;	
+&quot;server&quot;: &quot;127.0.0.1&quot;,	
+&quot;server_port&quot;: 1443	
+&#125;,	
+&quot;www.lovelive-anime.jp&quot;: &#123;		
+&quot;server&quot;: &quot;127.0.0.1&quot;,
+&quot;server_port&quot;: 10242
+&#125;&#125;,	
+&quot;strict_mode&quot;: true,	
+&quot;detour&quot;: &quot;ss-in&quot;	
+&#125;,	
+&#123;	
+&quot;type&quot;: &quot;shadowsocks&quot;,	
+&quot;tag&quot;: &quot;ss-in&quot;,	
+&quot;listen&quot;: &quot;127.0.0.1&quot;,	
+&quot;network&quot;: &quot;tcp&quot;,	
+&quot;method&quot;: &quot;2022-blake3-chacha20-poly1305&quot;,	
+&quot;password&quot;: &quot;r25btppBfl2L+1L/1q2dimMfyuDuS8JQOnaRUyvrHsM=&quot;	
+&#125;,	
+&#123;	
+&quot;type&quot;: &quot;vless&quot;,	
+&quot;tag&quot;: &quot;vless-in&quot;,
+&quot;listen&quot;: &quot;::&quot;,
+&quot;listen_port&quot;: 10242,
+&quot;users&quot;: [
+&#123;
+&quot;uuid&quot;: &quot;bf000d23-0752-40b4-affe-68f7707a9661&quot;,
+&quot;flow&quot;: &quot;xtls-rprx-vision&quot;
+&#125;
+],
+&quot;tls&quot;: &#123;
+&quot;enabled&quot;: true,
+&quot;server_name&quot;: &quot;www.lovelive-anime.jp&quot;,
+&quot;reality&quot;: &#123;
+&quot;enabled&quot;: true,
+&quot;handshake&quot;: &#123;
+&quot;server&quot;: &quot;www.lovelive-anime.jp&quot;,
+&quot;server_port&quot;: 443
+&#125;,
+
+&quot;private_key&quot;: &quot;gL2nPy8bT9vE44gYSvBgzHsotR5bFRjXixMo5NMpc1M&quot;,
+&quot;short_id&quot;: [
+&quot;0123456789abcdef&quot;
+]
+&#125;
+&#125;
+&#125;
+],
+&quot;outbounds&quot;: [
+&#123;
+&quot;type&quot;: &quot;direct&quot;,
+&quot;tag&quot;: &quot;direct&quot;
+&#125;,
+&#123;
+&quot;type&quot;: &quot;block&quot;,
+&quot;tag&quot;: &quot;block&quot;
+&#125;
+],
+&quot;route&quot;: &#123;
+&quot;geoip&quot;: &#123;
+&quot;download_url&quot;: &quot;https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db&quot;,
+&quot;download_detour&quot;: &quot;direct&quot;
+&#125;,
+&quot;geosite&quot;: &#123;
+&quot;download_url&quot;: &quot;https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db&quot;,
+&quot;download_detour&quot;: &quot;direct&quot;
+&#125;,
+&quot;rules&quot;: [
+&#123;
+&quot;geosite&quot;: &quot;cn&quot;,
+&quot;geoip&quot;: &quot;cn&quot;,
+&quot;outbound&quot;: &quot;direct&quot;
+&#125;,
+&#123;
+&quot;geosite&quot;: &quot;category-ads-all&quot;,
+&quot;outbound&quot;: &quot;block&quot;
+&#125;
+]
+&#125;
+&#125;
+</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com"></a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/06/03/sing-box%E6%90%AD%E5%BB%BAShadowTLS%20v3%E7%9A%84%E8%8A%82%E7%82%B9/">http://example.com/2023/06/03/sing-box%E6%90%AD%E5%BB%BAShadowTLS%20v3%E7%9A%84%E8%8A%82%E7%82%B9/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">横烟秋水上，疏雨夕阳中</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://tse1-mm.cn.bing.net/th/id/OIP-C.y5pc2kuaVo_q_0fON0stlQHaD4?w=319&amp;h=180&amp;c=7&amp;r=0&amp;o=5&amp;dpr=1.3&amp;pid=1.7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/09/18/%E9%98%B2%E5%A4%B1%E8%81%94%E6%89%8B%E6%90%93%E8%8A%82%E7%82%B9%E5%BF%85%E5%A4%87/" title="防失联手搓节点必备"><img class="cover" src="https://th.bing.com/th/id/OIP.-r4ljlcyRU-4FlPtHnjdeQHaEO?w=293&amp;h=180&amp;c=7&amp;r=0&amp;o=5&amp;dpr=1.3&amp;pid=1.7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">防失联手搓节点必备</div></div></a></div><div class="next-post pull-right"><a href="/2023/05/21/%E6%90%AD%E5%BB%BAMITM%E8%8A%82%E7%82%B9/" title="搭建MITM节点"><img class="cover" src="https://tse3-mm.cn.bing.net/th/id/OIP-C.qGFuYnUixgX1XLvYdYNqZgHaDE?w=335&amp;h=144&amp;c=7&amp;r=0&amp;o=5&amp;dpr=1.3&amp;pid=1.7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">搭建MITM节点</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name"></div><div class="author-info__description">初霁独登赏，西楼多远风。横烟秋水上，疏雨夕阳中。高树下山鸟，平芜飞草虫。唯应待明月，千里与君同。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">1.服务器设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%BC%80%E5%90%AFBBR%E5%8A%A0%E9%80%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1、开启BBR加速</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E6%9B%B4%E6%96%B0%E8%BD%AF%E4%BB%B6%E6%BA%90%E5%8F%8A%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="toc-number">1.2.</span> <span class="toc-text">2、更新软件源及安装依赖</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85sing-box"><span class="toc-number">2.</span> <span class="toc-text">2.一键安装sing-box</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC"><span class="toc-number">2.1.</span> <span class="toc-text">1.一键安装脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85sing-box"><span class="toc-number">3.</span> <span class="toc-text">3.手动安装sing-box</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%AE%89%E8%A3%85go"><span class="toc-number">3.1.</span> <span class="toc-text">1、安装go</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85sing-box"><span class="toc-number">3.2.</span> <span class="toc-text">2、编译安装sing-box</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E5%A4%8D%E5%88%B6%E7%BC%96%E8%AF%91%E5%A5%BD%E7%9A%84sing-box%E5%88%B0-usr-local-bin-%E7%9B%AE%E5%BD%95"><span class="toc-number">3.3.</span> <span class="toc-text">3、复制编译好的sing-box到&#x2F;usr&#x2F;local&#x2F;bin&#x2F;目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%E3%80%81%E4%B8%BAsing-box%E9%85%8D%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E6%9C%8D%E5%8A%A1"><span class="toc-number">3.4.</span> <span class="toc-text">4、为sing-box配置开机自启服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%E3%80%81%E5%88%9B%E5%BB%BAsing-box%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">3.5.</span> <span class="toc-text">5、创建sing-box文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6%E3%80%81%E5%88%9B%E5%BB%BAsing-box%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">3.6.</span> <span class="toc-text">6、创建sing-box配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7%E3%80%81%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF"><span class="toc-number">3.7.</span> <span class="toc-text">7、服务端配置信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8%E3%80%81%E6%B5%8B%E8%AF%95%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%98%AF%E5%90%A6%E6%9C%89%E6%95%88"><span class="toc-number">3.8.</span> <span class="toc-text">8、测试配置文件是否有效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9%E3%80%81%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AEsing-box%E4%B8%BA%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF"><span class="toc-number">3.9.</span> <span class="toc-text">9、启动并设置sing-box为开机自启</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10%E3%80%81%E6%9F%A5%E7%9C%8Bsing-box%E5%90%AF%E5%8A%A8%E7%8A%B6%E6%80%81"><span class="toc-number">3.10.</span> <span class="toc-text">10、查看sing-box启动状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11%E3%80%81sing-box%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%85%8D%E7%BD%AE"><span class="toc-number">3.11.</span> <span class="toc-text">11、sing-box客户端配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12%E3%80%81clash-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">3.12.</span> <span class="toc-text">12、clash 配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#12-1%E6%96%B0%E5%A2%9E%E9%85%8D%E7%BD%AE"><span class="toc-number">3.12.1.</span> <span class="toc-text">12.1新增配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-2%E3%80%81clash-%E9%85%8D%E7%BD%AE-%E9%9C%80%E8%A6%81-clashmeta-%E5%86%85%E6%A0%B8%EF%BC%89"><span class="toc-number">3.12.2.</span> <span class="toc-text">12.2、clash 配置 (需要 clashmeta 内核）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#13%E3%80%81%E5%85%B1%E7%94%A8-443-%E7%AB%AF%E5%8F%A3"><span class="toc-number">3.13.</span> <span class="toc-text">13、共用 443 端口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#13-1%E3%80%81shadowtls-%E5%92%8C%E7%BD%91%E7%AB%99%E5%85%B1%E6%9C%89-443-%E7%AB%AF%E5%8F%A3"><span class="toc-number">3.13.1.</span> <span class="toc-text">13.1、shadowtls 和网站共有 443 端口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-2%E3%80%81clash-%E9%85%8D%E7%BD%AE-%E9%9C%80%E8%A6%81-clashmeta-%E5%86%85%E6%A0%B8%EF%BC%89"><span class="toc-number">3.13.2.</span> <span class="toc-text">13.2、clash 配置 (需要 clashmeta 内核）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14%E3%80%81%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="toc-number">3.14.</span> <span class="toc-text">14、完整代码</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/09/18/%E9%98%B2%E5%A4%B1%E8%81%94%E6%89%8B%E6%90%93%E8%8A%82%E7%82%B9%E5%BF%85%E5%A4%87/" title="防失联手搓节点必备"><img src="https://th.bing.com/th/id/OIP.-r4ljlcyRU-4FlPtHnjdeQHaEO?w=293&amp;h=180&amp;c=7&amp;r=0&amp;o=5&amp;dpr=1.3&amp;pid=1.7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="防失联手搓节点必备"/></a><div class="content"><a class="title" href="/2023/09/18/%E9%98%B2%E5%A4%B1%E8%81%94%E6%89%8B%E6%90%93%E8%8A%82%E7%82%B9%E5%BF%85%E5%A4%87/" title="防失联手搓节点必备">防失联手搓节点必备</a><time datetime="2023-09-18T12:35:34.177Z" title="发表于 2023-09-18 20:35:34">2023-09-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/03/sing-box%E6%90%AD%E5%BB%BAShadowTLS%20v3%E7%9A%84%E8%8A%82%E7%82%B9/" title="sing-box搭建shadowtls v3的节点"><img src="https://tse1-mm.cn.bing.net/th/id/OIP-C.y5pc2kuaVo_q_0fON0stlQHaD4?w=319&amp;h=180&amp;c=7&amp;r=0&amp;o=5&amp;dpr=1.3&amp;pid=1.7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="sing-box搭建shadowtls v3的节点"/></a><div class="content"><a class="title" href="/2023/06/03/sing-box%E6%90%AD%E5%BB%BAShadowTLS%20v3%E7%9A%84%E8%8A%82%E7%82%B9/" title="sing-box搭建shadowtls v3的节点">sing-box搭建shadowtls v3的节点</a><time datetime="2023-06-03T11:02:40.245Z" title="发表于 2023-06-03 19:02:40">2023-06-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/05/21/%E6%90%AD%E5%BB%BAMITM%E8%8A%82%E7%82%B9/" title="搭建MITM节点"><img src="https://tse3-mm.cn.bing.net/th/id/OIP-C.qGFuYnUixgX1XLvYdYNqZgHaDE?w=335&amp;h=144&amp;c=7&amp;r=0&amp;o=5&amp;dpr=1.3&amp;pid=1.7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="搭建MITM节点"/></a><div class="content"><a class="title" href="/2023/05/21/%E6%90%AD%E5%BB%BAMITM%E8%8A%82%E7%82%B9/" title="搭建MITM节点">搭建MITM节点</a><time datetime="2023-05-21T14:34:31.101Z" title="发表于 2023-05-21 22:34:31">2023-05-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/05/21/%E5%A5%97%E7%94%A8CF%20cdn%E7%9A%84%E8%8A%82%E7%82%B9/" title="套用CF cdn的节点"><img src="https://th.bing.com/th?id=OIP.DoRzQ8-4WCxhpIsDN_FJGQHaFj&amp;w=288&amp;h=216&amp;c=8&amp;rs=1&amp;qlt=90&amp;o=6&amp;dpr=1.3&amp;pid=3.1&amp;rm=2" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="套用CF cdn的节点"/></a><div class="content"><a class="title" href="/2023/05/21/%E5%A5%97%E7%94%A8CF%20cdn%E7%9A%84%E8%8A%82%E7%82%B9/" title="套用CF cdn的节点">套用CF cdn的节点</a><time datetime="2023-05-21T14:06:14.675Z" title="发表于 2023-05-21 22:06:14">2023-05-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/18/%E9%80%9A%E8%BF%87X-UI%E6%90%AD%E5%BB%BA%E8%8A%82%E7%82%B9/" title="通过X-UI搭建节点"><img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.Vx9igRGOYVRa0Qcm--a9lQHaHa?w=164&amp;h=180&amp;c=7&amp;r=0&amp;o=5&amp;dpr=1.3&amp;pid=1.7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="通过X-UI搭建节点"/></a><div class="content"><a class="title" href="/2023/02/18/%E9%80%9A%E8%BF%87X-UI%E6%90%AD%E5%BB%BA%E8%8A%82%E7%82%B9/" title="通过X-UI搭建节点">通过X-UI搭建节点</a><time datetime="2023-02-18T04:58:02.718Z" title="发表于 2023-02-18 12:58:02">2023-02-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By null</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
